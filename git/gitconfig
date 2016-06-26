@@ -1,0 +1,61 @@
+[user]
+	name = Bernat Rafales
+	email = brafales@gmail.com
+[core]
+	editor = /usr/bin/vim
+[push]
+  default = current
+[color]
+  branch = auto
+  diff = auto
+  interactive = auto
+  status = auto
+  ui = auto
+[alias]
+  blog = log origin/master... --left-right
+  br = branch
+  ci = commit
+  co = checkout
+  dc = diff --cached
+  df = diff
+  di = diff
+  ds = diff --staged
+  fixup = commit --fixup
+  flog = log --pretty=fuller --decorate
+  l = log --pretty=format:'%Cred[%h]%Creset %Cgreen(%cr) %C(cyan)%an: %Creset %s %C(yellow)%d%Creset' --abbrev-commit --date=relative
+  lg = log -p
+  llog = log --date=local
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+  ls = ls-files
+  rec = for-each-ref --count=30 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+  recent = for-each-ref --sort=-committerdate refs/heads/ --format='Date: %(committerdate:short) | Author(s): %(authorname) | Branch name: %(refname:short)'
+  rum = rebase master@{u}
+  squash = commit --squash
+  st = status
+  sta = stash
+  unpulled = !"PROJ_BRANCH=$(git symbolic-ref HEAD | sed 's|refs/heads/||') && git fetch && git log HEAD..origin/$PROJ_BRANCH"
+  unpushed = !"PROJ_BRANCH=$(git symbolic-ref HEAD | sed 's|refs/heads/||') && git log origin/$PROJ_BRANCH..HEAD"
+  unstage = reset HEAD
+[format]
+  pretty = format:"%h %C(yellow)%ci%Creset %Cgreen%an%Creset | %s"
+[core]
+  pager = less -FXRS -x2
+[merge "railsschema"]
+  name = newer Rails schema version
+  driver = "ruby -e '\n\
+    system %(git), %(merge-file), %(--marker-size=%L), %(%A), %(%O), %(%B)\n\
+    b = File.read(%(%A))\n\
+    b.sub!(/^<+ .*\\nActiveRecord::Schema\\.define.:version => (\\d+). do\\n=+\\nActiveRecord::Schema\\.define.:version => (\\d+). do\\n>+ .*/) do\n\
+    %(ActiveRecord::Schema.define(:version => #{[$1, $2].max}) do)\n\
+    end\n\
+    File.open(%(%A), %(w)) {|f| f.write(b)}\n\
+    exit 1 if b.include?(%(<)*%L)'"
+[merge]
+  conflictstyle = diff3
+[apply]
+  whitespace = nowarn
+[branch]
+  autosetupmerge = true
+[rebase]
+  autosquash = true

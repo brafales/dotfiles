@@ -1,0 +1,92 @@
+" === Vundle Initialization ===
+" This loads all the plugins specified in ~/.dotfiles/vim/vundles.vim
+" Use Vundle plugin to manage all other plugins
+if filereadable(expand("~/.dotfiles/vim/vundles.vim"))
+  source ~/.dotfiles/vim/vundles.vim
+endif
+
+let mapleader = ","
+
+"=== General config ===
+set number                      "Line numbers are good
+set backspace=indent,eol,start  "Allow backspace in insert mode
+set history=1000                "Store lots of :cmdline history
+set showcmd                     "Show incomplete cmds down the bottom
+set showmode                    "Show current mode down the bottom
+set gcr=a:blinkon0              "Disable cursor blink
+set visualbell                  "No sounds
+set autoread                    "Reload files changed outside vim
+set hidden                      "Buffers can be moved to bg without saving
+runtime macros/matchit.vim      "Better support for % matching
+set wildmenu                    "Better auto complete
+set wildmode=list:longest
+set title                       "Set terminal title
+set list                        "Show special characters"
+set listchars=trail:~,tab:▸\ ,eol:¬
+set hlsearch
+set incsearch
+set encoding=utf-8
+set ts=4
+set cindent
+set autoindent
+set smarttab
+set expandtab
+set showmatch
+set mat=5
+syntax enable
+set background=dark
+colorscheme solarized
+
+"Font
+if has('gui_running')
+  set guifont=Monaco:h12
+endif
+
+"Highlight text over the column limit (120)
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%121v.\+/
+
+" Show tab number (useful for Cmd-1, Cmd-2.. mapping)
+" For some reason this doesn't work as a regular set command,
+" (the numbers don't show up) so I made it a VimEnter event
+autocmd VimEnter * set guitablabel=%N:\ %t\ %M
+
+filetype plugin on
+set ofu=syntaxcomplete#Complete
+
+"More sensible back up options
+set backup " backup files
+set backupdir=/tmp,. " backup files
+set directory=/tmp,. " swap files
+
+"status line
+set laststatus=2
+
+"Specific for Ruby
+au BufRead,BufNewFile *.rb,*.rhtml set shiftwidth=2
+au BufRead,BufNewFile *.rb,*.rhtml set softtabstop=2
+au BufRead,BufNewFile *.erb,*.rhtml set shiftwidth=2
+au BufRead,BufNewFile *.erb,*.rhtml set softtabstop=2
+
+"Specific for Javascript
+au BufRead,BufNewFile *.js set shiftwidth=2
+au BufRead,BufNewFile *.js set softtabstop=2
+
+"crontab shit for mac os x
+au FileType crontab set nobackup nowritebackup
+
+"ctrlp
+set wildignore+=**/public/assets,**/public/files,**public/product_images,**/tmp,.git
+nnoremap <Leader>cp :CtrlPMixed<CR>
+
+set t_Co=256
+
+"latex
+let g:tex_flavor='latex'
+
+"Source settings files
+let vimsettings = '~/.dotfiles/vim/settings'
+
+for fpath in split(globpath(vimsettings, '*.vim'), '\n')
+  exe 'source' fpath
+endfor
