@@ -32,6 +32,7 @@ set autoindent
 set smarttab
 set expandtab
 set showmatch
+set mouse=a
 set mat=5
 syntax enable
 set background=dark
